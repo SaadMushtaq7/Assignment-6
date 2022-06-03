@@ -1,0 +1,36 @@
+.loader{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15%;
+    
+}
+.homepage-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.homepage-container .image-container img{
+    width: 350px;
+    height: 350px;
+}
+
+.homepage-container .input-container{
+    margin-top: 30px;
+    display: flex;
+    flex-direction: row;
+}
+.homepage-container .input-container .input-field{
+    margin-left: 20px;
+}
+
+.homepage-container .button-container .comparison-btn{
+    height: 120px;
+    width: 120px;
+    border-radius: 60px;
+    color: white;
+    margin-top: 20px;
+}

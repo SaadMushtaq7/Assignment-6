@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css2?family=Neucha&display=swap');
+.error-block {
+    color: #2abf83;
+    width: 100%;
+    margin-top: 17%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.result-container,
+.result-container .body{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.result-container h1{
+    font-family: 'Neucha';
+    color: #2abf83;
+    font-size: 50px;
+}
+.result-container .logo{
+    margin: 0;
+    padding: 0;
+    margin-top: 20px;
+    height: 175px;
+    width: 175px;
+}
+.result-container .logo img{
+    
+    height: 150px;
+    width: 150px;
+    border-radius: 10px;
+    transition: all 0.5s;
+}
+.result-container .logo img:hover{
+    height: 170px;
+    width: 170px;
+}
+.result-container .table-content{
+    display: flex;
+    flex-direction: row;
+}
+
+.result-container .chart-comparison{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 50px;
+    
+}
+
+.result-container .final-results{
+   margin-top: 100px;
+   border: 1px solid #2abf83;
+   box-shadow: 5px 10px #2abf83;
+   padding: 20px 200px;
+   
+}
+.result-container .final-results h1{
+    font-size: 20px;
+}
+.result-container .final-specs{
+   margin-top: 50px;
+   border: 1px solid #2abf83;
+   box-shadow: 5px 10px #2abf83;
+   padding: 10px;
+   width: 60vw;
+   margin-bottom: 50px;
+   display: flex;
+}
+.result-container .final-specs .specs-header{
+    justify-content: flex-start;
+    align-items: flex-start;
+    color: #2abf83;
+}
+.result-container .final-specs .description{
+    width: 300px;
+}
+.result-container .final-specs .description p{
+    font-size: 12px;
+}
+.result-container .final-specs .link p a{
+    text-decoration: none;
+    font-weight: bolder;
+    font-family: 'Neucha';
+    font-size: 25px;
+    color: #2abf83;
+}
+.result-container .final-specs .link p a:hover{
+    border-bottom: 4px solid #2abf83;
+}
+.result-container .final-specs .detail-specs{
+    margin-left: 150px;
+    display: flex;
+    flex-direction: row;
+    color: #2abf83;
+}
+.result-container .final-specs .detail-specs .downloads,
+.result-container .final-specs .detail-specs .stars,
+.result-container .final-specs .detail-specs .health{
+    border: 1px solid #2abf83;
+    box-shadow: 2px 5px #2abf83;
+    padding: 10px;
+    margin-left: 20px;
+    width: 100px;
+    height: 100px;
+    text-align: center;
+}

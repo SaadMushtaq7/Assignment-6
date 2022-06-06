@@ -1,14 +1,15 @@
 import { FC, useEffect, useState } from "react";
 import { useQuery } from "react-query";
-import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { ToastContainer, toast } from "react-toastify";
 import { Triangle } from "react-loader-spinner";
-import { fetchPackages } from "../services/npmPackages";
-import { setPackageOne, setPackageTwo } from "../redux/actions/filesActions";
+import {
+  fetchPackages,
+  fetchSuggestionPackages,
+} from "../services/npmPackages";
 import Logo from "../logo2.png";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/home-page.css";
@@ -22,10 +23,22 @@ const HomePage: FC = () => {
     },
   });
 
-  const dispatch = useDispatch();
   const [firstPackage, setFirstPackage] = useState<string>("");
   const [secondPackage, setSecondPackage] = useState<string>("");
+  const [suggestPackage, setSuggestPackage] = useState<string>("");
+  const [fetchingOne, setFetchingOne] = useState<boolean>(false);
+  const [fetchingTwo, setFetchingTwo] = useState<boolean>(false);
+  const [suggestionFetched, setSuggestionFetched] = useState<boolean>(false);
   const [isClicked, setIsClicked] = useState<Boolean>(false);
+
+  const { data: suggestionResults, refetch: suggestionRefetch } = useQuery(
+    "suggestionPackages",
+    async ({ signal }) => fetchSuggestionPackages(suggestPackage, signal),
+    {
+      enabled: false,
+      cacheTime: 0,
+    }
+  );
 
   const {
     data: firstResults,
@@ -59,11 +72,33 @@ const HomePage: FC = () => {
     }
   };
 
+  const handleFirstPackage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFirstPackage(e.target.value);
+    setSuggestPackage(e.target.value);
+    setFetchingOne(true);
+    suggestionRefetch();
+  };
+
+  const handleSecondPackage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSecondPackage(e.target.value);
+    setSuggestPackage(e.target.value);
+    setFetchingTwo(true);
+    suggestionRefetch();
+  };
   useEffect(() => {
-    if (firstSuccess && secondSuccess && isClicked) {
-      dispatch(setPackageOne(firstResults));
-      dispatch(setPackageTwo(secondResults));
-      navigate("/result");
+    if (suggestionResults) {
+      setSuggestionFetched(true);
+    }
+    if (
+      firstSuccess &&
+      secondSuccess &&
+      isClicked &&
+      firstResults &&
+      secondResults
+    ) {
+      navigate("/result", {
+        state: { packageOne: firstResults, packageTwo: secondResults },
+      });
       setIsClicked(false);
     }
   }, [
@@ -71,9 +106,9 @@ const HomePage: FC = () => {
     secondResults,
     isClicked,
     navigate,
-    dispatch,
     firstSuccess,
     secondSuccess,
+    suggestionResults,
   ]);
 
   return (
@@ -92,27 +127,70 @@ const HomePage: FC = () => {
                 </Link>
               </div>
               <div className="input-container">
-                <TextField
-                  className="input"
-                  id="outlined-first"
-                  label="First Package"
-                  value={firstPackage}
-                  onChange={(e) => {
-                    setFirstPackage(e.target.value);
-                  }}
-                  variant="outlined"
-                />
-                <TextField
-                  className="input input-field"
-                  id="outlined-second"
-                  label="Second Package"
-                  value={secondPackage}
-                  onChange={(e) => {
-                    setSecondPackage(e.target.value);
-                  }}
-                  variant="outlined"
-                />
+                <div>
+                  <TextField
+                    className="input"
+                    id="outlined-first"
+                    label="First Package"
+                    value={firstPackage}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      handleFirstPackage(e)
+                    }
+                    variant="outlined"
+                  />
+                  {suggestionFetched && fetchingOne ? (
+                    <div className="suggestion-container">
+                      {suggestionResults.map((suggest: any, index: number) => (
+                        <p
+                          className="dataItem"
+                          onClick={() => {
+                            setFirstPackage(suggest.package.name);
+                            setSuggestionFetched(false);
+                            setFetchingOne(false);
+                          }}
+                          key={index}
+                        >
+                          {suggest.package.name}
+                        </p>
+                      ))}
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                </div>
+                <div>
+                  <TextField
+                    className="input input-field"
+                    id="outlined-second"
+                    label="Second Package"
+                    value={secondPackage}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      handleSecondPackage(e)
+                    }
+                    variant="outlined"
+                  />
+                  {suggestionFetched && fetchingTwo ? (
+                    <div className="suggestion-container">
+                      {suggestionResults.map((suggest: any, index: number) => (
+                        <p
+                          className="dataItem"
+                          onClick={() => {
+                            setSecondPackage(suggest.package.name);
+                            setSuggestionFetched(false);
+                            setFetchingTwo(false);
+                          }}
+                          key={index}
+                        >
+                          {suggest.package.name}
+                        </p>
+                      ))}
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                </div>
               </div>
+
               <div className="button-container">
                 <Button
                   className="comparison-btn"

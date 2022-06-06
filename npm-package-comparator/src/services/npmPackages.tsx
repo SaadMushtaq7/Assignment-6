@@ -11,9 +11,16 @@ export const fetchPackages = async (npmPackage: string) => {
     });
 };
 
-export const fetchSuggestionPackages = async (npmPackage: string) => {
+export const fetchSuggestionPackages = async (
+  npmPackage: string,
+  signal: any
+) => {
+  console.log(npmPackage);
   return await axios
-    .get(`https://api.npms.io/v2/search/suggestions?q=${npmPackage}`)
+    .get(`https://api.npms.io/v2/search/suggestions?q=${npmPackage}`, {
+      signal,
+    })
+    //.get(`https://api.npms.io/v2/search/suggestions?q=rea`)
     .then((response) => {
       return response.data;
     })

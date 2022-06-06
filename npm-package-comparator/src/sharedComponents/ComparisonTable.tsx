@@ -20,7 +20,7 @@ interface Props {
   license: string;
   lastModDate: string;
   author: string;
-  maintainers: Maintainer[];
+  maintainers: Maintainer;
 }
 
 const ComparisonTable: FC<Props> = ({
@@ -90,11 +90,7 @@ const ComparisonTable: FC<Props> = ({
               <TableCell className="header">Maintainers</TableCell>
               <TableCell className="header-name" align="center">
                 {maintainers ? (
-                  maintainers.map((maintainer) => (
-                    <li key={maintainer.email}>
-                      {" • " + maintainer.username}
-                    </li>
-                  ))
+                  <li>{maintainers.username}</li>
                 ) : (
                   <p>{author}</p>
                 )}

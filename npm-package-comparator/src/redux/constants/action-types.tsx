@@ -1,4 +1,0 @@
-export const ActionTypes = {
-  SET_FIRST_PACKAGE: "SET_FIRST_PACKAGE",
-  SET_SECOND_PACKAGE: "SET_SECOND_PACKAGE",
-};

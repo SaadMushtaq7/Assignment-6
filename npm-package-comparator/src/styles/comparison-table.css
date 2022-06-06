@@ -25,6 +25,7 @@
 }
 .table-container .header-name{
     color: white;
+    height: 50px;
 }
 .table-container li{
     display: inline;

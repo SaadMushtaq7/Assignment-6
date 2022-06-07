@@ -1,15 +1,10 @@
 import React, { FC, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+//src
 import ComparisonTable from "../sharedComponents/ComparisonTable";
 import ComparisonChart from "../sharedComponents/ComparisonChart";
 import Logo from "../logo2.png";
 import "../styles/result-page.css";
-
-interface Downloads {
-  from: string;
-  to: string;
-  count: number;
-}
 
 const ResultPage: FC = () => {
   const [betterPackage, setBetterPackage] = useState<any>();
@@ -19,30 +14,25 @@ const ResultPage: FC = () => {
   const packageTwo = location.state.packageTwo;
   const packages = [packageOne, packageTwo];
 
-  const findTotal = (downloads: Downloads[]) => {
-    return downloads
-      .map((download) => download.count)
-      .reduce(
-        (prevNumber: number, currNumber: number) => prevNumber + currNumber
-      );
-  };
   useEffect(() => {
-    const totalOne = findTotal(packageOne.collected.npm.downloads);
-    const totalTwo = findTotal(packageTwo.collected.npm.downloads);
-    const meanOne = totalOne / packageOne.collected.npm.downloads.length;
-    const meanTwo = totalTwo / packageTwo.collected.npm.downloads.length;
     let downloadOne = 0;
     let downloadTwo = 0;
-    if (meanOne >= meanTwo) {
-      downloadOne = ((meanOne - meanTwo) / meanOne) * 100;
-      downloadTwo = 100 - downloadOne;
+    if (
+      packageOne.evaluation.popularity.downloadsCount >=
+      packageTwo.evaluation.popularity.downloadsCount
+    ) {
+      downloadOne =
+        (packageTwo.evaluation.popularity.downloadsCount /
+          packageOne.evaluation.popularity.downloadsCount) *
+        50;
+      downloadTwo = 50 - downloadOne;
     } else {
-      downloadTwo = ((meanTwo - meanOne) / meanTwo) * 100;
-      downloadOne = 100 - downloadTwo;
+      downloadTwo =
+        (packageOne.evaluation.popularity.downloadsCount /
+          packageTwo.evaluation.popularity.downloadsCount) *
+        50;
+      downloadOne = 50 - downloadTwo;
     }
-
-    const downloadPercentageOne = downloadOne * 0.5;
-    const downloadPercentageTwo = downloadTwo * 0.5;
     let communityInterestOne = 0;
     let communityInterestTwo = 0;
     if (
@@ -50,40 +40,58 @@ const ResultPage: FC = () => {
       packageTwo.evaluation.popularity.communityInterest
     ) {
       communityInterestOne =
-        ((packageOne.evaluation.popularity.communityInterest -
-          packageTwo.evaluation.popularity.communityInterest) /
+        (packageTwo.evaluation.popularity.communityInterest /
           packageOne.evaluation.popularity.communityInterest) *
-        100;
-      communityInterestTwo = 100 - communityInterestOne;
+        20;
+      communityInterestTwo = 20 - communityInterestOne;
     } else {
       communityInterestTwo =
-        ((packageTwo.evaluation.popularity.communityInterest -
-          packageOne.evaluation.popularity.communityInterest) /
+        (packageOne.evaluation.popularity.communityInterest /
           packageTwo.evaluation.popularity.communityInterest) *
-        100;
-      communityInterestOne = 100 - communityInterestTwo;
+        20;
+      communityInterestOne = 20 - communityInterestTwo;
     }
-
-    const communityInterestPercentageOne = communityInterestOne * 0.2;
-    const communityInterestPercentageTwo = communityInterestTwo * 0.2;
-
-    const carefulnessOne = packageOne.evaluation.quality.carefulness * 0.15;
-    const carefulnessTwo = packageTwo.evaluation.quality.carefulness * 0.15;
-
-    const healthOne = packageOne.evaluation.quality.health * 0.15;
-    const healthTwo = packageTwo.evaluation.quality.health * 0.15;
-
+    let carefulnessOne = 0;
+    let carefulnessTwo = 0;
+    if (
+      packageOne.evaluation.quality.carefulness >=
+      packageTwo.evaluation.quality.carefulness
+    ) {
+      carefulnessOne =
+        (packageTwo.evaluation.quality.carefulness /
+          packageOne.evaluation.quality.carefulness) *
+        15;
+      carefulnessTwo = 15 - carefulnessOne;
+    } else {
+      carefulnessTwo =
+        (packageOne.evaluation.quality.carefulness /
+          packageTwo.evaluation.quality.carefulness) *
+        15;
+      carefulnessOne = 15 - carefulnessTwo;
+    }
+    let healthOne = 0;
+    let healthTwo = 0;
+    if (
+      packageOne.evaluation.quality.health >=
+      packageTwo.evaluation.quality.health
+    ) {
+      healthOne =
+        (packageTwo.evaluation.quality.health /
+          packageOne.evaluation.quality.health) *
+        15;
+      healthTwo = 15 - healthOne;
+    } else {
+      healthTwo =
+        (packageOne.evaluation.quality.health /
+          packageTwo.evaluation.quality.health) *
+        15;
+      healthOne = 15 - healthTwo;
+    }
     const finalOne =
-      downloadPercentageOne +
-      communityInterestPercentageOne +
-      carefulnessOne +
-      healthOne;
+      downloadOne + communityInterestOne + carefulnessOne + healthOne;
 
     const finalTwo =
-      downloadPercentageTwo +
-      communityInterestPercentageTwo +
-      carefulnessTwo +
-      healthTwo;
+      downloadTwo + communityInterestTwo + carefulnessTwo + healthTwo;
     if (finalOne >= finalTwo) {
       setBetterPackage(packageOne);
       setBetterTimes(finalOne / finalTwo);

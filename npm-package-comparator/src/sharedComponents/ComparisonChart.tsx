@@ -10,6 +10,7 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
+//src
 import "../styles/comparison-table.css";
 
 ChartJS.register(

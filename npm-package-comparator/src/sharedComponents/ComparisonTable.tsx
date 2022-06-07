@@ -1,10 +1,12 @@
 import React, { FC } from "react";
+//styles
 import Table from "@mui/material/Table";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+//src
 import "../styles/comparison-table.css";
 
 interface Maintainer {
@@ -33,6 +35,21 @@ const ComparisonTable: FC<Props> = ({
   author,
   maintainers,
 }) => {
+  const today = new Date();
+
+  const date =
+    today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
+  const [modDate] = lastModDate.split("T");
+  const [currYear, currMonth] = date.split("-");
+  const [modYear, modMonth] = modDate.split("-");
+  let year = 0,
+    month = 0;
+  if (modYear < currYear) {
+    year = parseInt(currYear) - parseInt(modYear);
+  }
+  if (modMonth < currMonth) {
+    month = parseInt(currMonth) - parseInt(modMonth);
+  }
   return (
     <div className="table-container">
       <TableContainer sx={{ width: 500 }} component={Paper}>
@@ -77,7 +94,12 @@ const ComparisonTable: FC<Props> = ({
             <TableRow className="table-head">
               <TableCell className="header">Last Modification Date</TableCell>
               <TableCell className="header-name" align="center">
-                {lastModDate}
+                Last Modified:
+                {year > 0
+                  ? year + " Year/s ago"
+                  : month > 0
+                  ? month + " month/s ago"
+                  : " less than a month ago"}
               </TableCell>
             </TableRow>
             <TableRow className="table-head">

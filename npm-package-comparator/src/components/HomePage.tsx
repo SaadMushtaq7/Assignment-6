@@ -26,9 +26,12 @@ const HomePage: FC = () => {
   const [firstPackage, setFirstPackage] = useState<string>("");
   const [secondPackage, setSecondPackage] = useState<string>("");
   const [suggestPackage, setSuggestPackage] = useState<string>("");
-  const [fetchingOne, setFetchingOne] = useState<boolean>(false);
-  const [fetchingTwo, setFetchingTwo] = useState<boolean>(false);
-  const [suggestionFetched, setSuggestionFetched] = useState<boolean>(false);
+  const [showSuggestionListOne, setShowSuggestionListOne] =
+    useState<boolean>(false);
+  const [showSuggestionListTwo, setShowSuggestionListTwo] =
+    useState<boolean>(false);
+  const [suggestionFetchedSeparately, setSuggestionFetchedSeparately] =
+    useState<boolean>(false);
   const [isClicked, setIsClicked] = useState<Boolean>(false);
 
   const { data: suggestionResults, refetch: suggestionRefetch } = useQuery(
@@ -39,7 +42,7 @@ const HomePage: FC = () => {
       cacheTime: 0,
     }
   );
-
+  console.log(suggestionResults);
   const {
     data: firstResults,
     refetch: firstRefetch,
@@ -77,19 +80,19 @@ const HomePage: FC = () => {
   const handleFirstPackage = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFirstPackage(e.target.value);
     setSuggestPackage(e.target.value);
-    setFetchingOne(true);
+    setShowSuggestionListOne(true);
     suggestionRefetch();
   };
 
   const handleSecondPackage = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSecondPackage(e.target.value);
     setSuggestPackage(e.target.value);
-    setFetchingTwo(true);
+    setShowSuggestionListTwo(true);
     suggestionRefetch();
   };
   useEffect(() => {
     if (suggestionResults) {
-      setSuggestionFetched(true);
+      setSuggestionFetchedSeparately(true);
     }
     if (
       firstSuccess &&
@@ -147,15 +150,15 @@ const HomePage: FC = () => {
                     }
                     variant="outlined"
                   />
-                  {suggestionFetched && fetchingOne ? (
+                  {suggestionFetchedSeparately && showSuggestionListOne ? (
                     <div className="suggestion-container">
                       {suggestionResults.map((suggest: any, index: number) => (
                         <p
                           className="dataItem"
                           onClick={() => {
                             setFirstPackage(suggest.package.name);
-                            setSuggestionFetched(false);
-                            setFetchingOne(false);
+                            setSuggestionFetchedSeparately(false);
+                            setShowSuggestionListOne(false);
                           }}
                           key={index}
                         >
@@ -178,15 +181,15 @@ const HomePage: FC = () => {
                     }
                     variant="outlined"
                   />
-                  {suggestionFetched && fetchingTwo ? (
+                  {suggestionFetchedSeparately && showSuggestionListTwo ? (
                     <div className="suggestion-container">
                       {suggestionResults.map((suggest: any, index: number) => (
                         <p
                           className="dataItem"
                           onClick={() => {
                             setSecondPackage(suggest.package.name);
-                            setSuggestionFetched(false);
-                            setFetchingTwo(false);
+                            setSuggestionFetchedSeparately(false);
+                            setShowSuggestionListTwo(false);
                           }}
                           key={index}
                         >

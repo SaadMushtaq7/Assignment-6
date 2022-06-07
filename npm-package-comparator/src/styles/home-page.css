@@ -63,3 +63,11 @@
 .suggestion-container p:hover {
     background-color: lightgrey;
   }
+
+.homepage-container .error-container {
+  color: #2ac083;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10%;
+}

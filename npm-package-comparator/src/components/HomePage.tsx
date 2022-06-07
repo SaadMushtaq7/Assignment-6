@@ -45,6 +45,7 @@ const HomePage: FC = () => {
     refetch: firstRefetch,
     isLoading: firstLoading,
     isSuccess: firstSuccess,
+    isError: firstError,
   } = useQuery("firstPackage", () => fetchPackages(firstPackage), {
     enabled: false,
     cacheTime: 0,
@@ -55,6 +56,7 @@ const HomePage: FC = () => {
     refetch: secondRefetch,
     isLoading: secondLoading,
     isSuccess: secondSuccess,
+    isError: secondError,
   } = useQuery("secondPackage", () => fetchPackages(secondPackage), {
     enabled: false,
     cacheTime: 0,
@@ -116,6 +118,13 @@ const HomePage: FC = () => {
       {firstLoading || secondLoading ? (
         <div className="loader">
           <Triangle height="100" width="100" color="#2abf83" />
+        </div>
+      ) : firstError && secondError ? (
+        <div className="error-container">
+          <h1>
+            Error Loading File{" "}
+            <i className="fa-solid fa-triangle-exclamation" />
+          </h1>
         </div>
       ) : (
         <>

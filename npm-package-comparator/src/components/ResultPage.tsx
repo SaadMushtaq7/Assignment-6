@@ -7,13 +7,13 @@ import Logo from "../logo2.png";
 import "../styles/result-page.css";
 
 const ResultPage: FC = () => {
-  const [betterPackage, setBetterPackage] = useState<any>();
-  const [betterTimes, setBetterTimes] = useState<Number>(0.0);
+  const [recommendedPackage, setRecommendedPackage] = useState<any>();
+  const [packageRates, setPackageRates] = useState<Number>(0.0);
   const location: any = useLocation();
   const packageOne = location.state.packageOne;
   const packageTwo = location.state.packageTwo;
   const packages = [packageOne, packageTwo];
-
+  console.log(packageOne, packageTwo);
   useEffect(() => {
     let downloadOne = 0;
     let downloadTwo = 0;
@@ -93,14 +93,13 @@ const ResultPage: FC = () => {
     const finalTwo =
       downloadTwo + communityInterestTwo + carefulnessTwo + healthTwo;
     if (finalOne >= finalTwo) {
-      setBetterPackage(packageOne);
-      setBetterTimes(finalOne / finalTwo);
+      setRecommendedPackage(packageOne);
+      setPackageRates(finalOne / finalTwo);
     } else {
-      setBetterPackage(packageTwo);
-      setBetterTimes(finalTwo / finalOne);
+      setRecommendedPackage(packageTwo);
+      setPackageRates(finalTwo / finalOne);
     }
   }, [packageOne, packageTwo]);
-
   return (
     <div className="result-container">
       <div className="logo">
@@ -138,27 +137,27 @@ const ResultPage: FC = () => {
             secondData={packageTwo.collected.npm.downloads}
           />
         </div>
-        {betterPackage && (
+        {recommendedPackage && (
           <>
             <div className="final-results">
               <h1>
-                {betterPackage.collected.metadata.name} is{" "}
-                {betterTimes.toFixed(2)} times better
+                {recommendedPackage.collected.metadata.name} is{" "}
+                {packageRates.toFixed(2)} times better
               </h1>
             </div>
             <div className="final-specs">
               <div className="specs-header">
                 <p>
                   <strong>Recommended:</strong>{" "}
-                  {betterPackage.collected.metadata.name}
+                  {recommendedPackage.collected.metadata.name}
                 </p>
                 <div className="description">
-                  <p>{betterPackage.collected.metadata.description}</p>
+                  <p>{recommendedPackage.collected.metadata.description}</p>
                 </div>
                 <div className="link">
                   <p>
                     Visit this link for more information{" "}
-                    <a href={betterPackage.collected.github.homepage}>
+                    <a href={recommendedPackage.collected.github.homepage}>
                       HomePage
                     </a>
                   </p>
@@ -174,18 +173,18 @@ const ResultPage: FC = () => {
                   <p>Downloads</p>
                   <h3>
                     {Math.floor(
-                      betterPackage.evaluation.popularity.downloadsCount
+                      recommendedPackage.evaluation.popularity.downloadsCount
                     )}
                     +
                   </h3>
                 </div>
                 <div className="stars">
                   <p>Stars</p>
-                  <h3>{betterPackage.collected.github.starsCount}+</h3>
+                  <h3>{recommendedPackage.collected.github.starsCount}+</h3>
                 </div>
                 <div className="health">
                   <p>Health</p>
-                  <h3>{betterPackage.evaluation.quality.health * 100}%</h3>
+                  <h3>{recommendedPackage.evaluation.quality.health * 100}%</h3>
                 </div>
               </div>
             </div>

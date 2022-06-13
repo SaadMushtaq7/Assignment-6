@@ -1,18 +1,15 @@
 import { FC, useEffect, useState } from "react";
-import { useQuery } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { ToastContainer, toast } from "react-toastify";
 import { Triangle } from "react-loader-spinner";
-import {
-  fetchPackages,
-  fetchSuggestionPackages,
-} from "../services/npmPackages";
 import Logo from "../logo2.png";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/home-page.css";
+import { useFetchSinglePackage } from "../custom hook/useFetchSinglePackage";
+import { useFetchSuggestPackage } from "../custom hook/useFetchSuggestPackage";
 
 const HomePage: FC = () => {
   const Theme = createTheme({
@@ -25,7 +22,7 @@ const HomePage: FC = () => {
 
   const [firstPackage, setFirstPackage] = useState<string>("");
   const [secondPackage, setSecondPackage] = useState<string>("");
-  const [suggestPackage, setSuggestPackage] = useState<string>("");
+  const [queryPackage, setQueryPackage] = useState<string>("");
   const [showSuggestionListOne, setShowSuggestionListOne] =
     useState<boolean>(false);
   const [showSuggestionListTwo, setShowSuggestionListTwo] =
@@ -34,25 +31,16 @@ const HomePage: FC = () => {
     useState<boolean>(false);
   const [isClicked, setIsClicked] = useState<Boolean>(false);
 
-  const { data: suggestionResults, refetch: suggestionRefetch } = useQuery(
-    "suggestionPackages",
-    async ({ signal }) => fetchSuggestionPackages(suggestPackage, signal),
-    {
-      enabled: false,
-      cacheTime: 0,
-    }
-  );
-  console.log(suggestionResults);
+  const { data: suggestionResults, refetch: suggestionRefetch } =
+    useFetchSuggestPackage(queryPackage);
+
   const {
     data: firstResults,
     refetch: firstRefetch,
     isLoading: firstLoading,
     isSuccess: firstSuccess,
     isError: firstError,
-  } = useQuery("firstPackage", () => fetchPackages(firstPackage), {
-    enabled: false,
-    cacheTime: 0,
-  });
+  } = useFetchSinglePackage("firstPackage", firstPackage);
 
   const {
     data: secondResults,
@@ -60,10 +48,7 @@ const HomePage: FC = () => {
     isLoading: secondLoading,
     isSuccess: secondSuccess,
     isError: secondError,
-  } = useQuery("secondPackage", () => fetchPackages(secondPackage), {
-    enabled: false,
-    cacheTime: 0,
-  });
+  } = useFetchSinglePackage("secondPackage", secondPackage);
 
   const navigate = useNavigate();
 
@@ -79,14 +64,14 @@ const HomePage: FC = () => {
 
   const handleFirstPackage = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFirstPackage(e.target.value);
-    setSuggestPackage(e.target.value);
+    setQueryPackage(e.target.value);
     setShowSuggestionListOne(true);
     suggestionRefetch();
   };
 
   const handleSecondPackage = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSecondPackage(e.target.value);
-    setSuggestPackage(e.target.value);
+    setQueryPackage(e.target.value);
     setShowSuggestionListTwo(true);
     suggestionRefetch();
   };
